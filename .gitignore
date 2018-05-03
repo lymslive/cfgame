@@ -1,0 +1,7 @@
+*.swp
+*.o
+*.out
+core.*
+Session*.vim
+cfgame
+bin/
