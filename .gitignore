@@ -1,6 +1,7 @@
 *.swp
 *.o
 *.out
+*.bak
 core.*
 Session*.vim
 cfgame
