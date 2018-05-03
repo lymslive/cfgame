@@ -133,12 +133,12 @@ func _convTDR() (nFile int, err error) {
 
 		tdrname := token[2]
 		tblname := token[3]
-		csvname := filepath.Join(subdir.sheet, tblname) + ".csv"
+		csvname := filepath.Join(subdir.sheet, tblname) + filext.sheet
 
 		// 拼接 resconv.exe 的参数
 		var args = []string{resarg1, tdrfile, tdrname, csvname, subdir.output}
 		for i := 4; i < nt; i++ {
-			csvname := filepath.Join(subdir.sheet, token[i]) + ".csv"
+			csvname := filepath.Join(subdir.sheet, token[i]) + filext.sheet
 			args = append(args, csvname)
 		}
 

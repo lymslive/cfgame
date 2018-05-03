@@ -1,0 +1,4 @@
+[server]
+host = "localhost"
+port = 8000
+static = ["css", "js", "img"]

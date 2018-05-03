@@ -25,8 +25,8 @@ func SetDataDir(path string) (old string) {
 	return
 }
 
-// 子目录名
-var subdir struct {
+// 各类子目录名，文件后缀名
+var subdir, filext struct {
 	excel  string
 	sheet  string
 	output string
@@ -37,18 +37,23 @@ var subdir struct {
 var xls2csv string
 var x2cconf string
 
-// tdr 转表工具参数
-var resconv = "resconv.exe"
-var resarg1 = "conv"
-var tdrfile = "ResMeta.tdr"
-var convfile = "策划转表_公共.bat"
-
 func init() {
 	subdir.excel = "xls"
 	subdir.sheet = "csv"
 	subdir.output = "bin"
 	subdir.midput = "xls_tmp"
 
+	filext.excel = ".xlsx"
+	filext.sheet = ".csv"
+	filext.output = ".bin"
+	filext.midput = ".xlsx"
+
 	xls2csv = filepath.Join("x2c", "xls2csv.exe")
 	x2cconf = "x2c.x2c"
 }
+
+// tdr 转表工具参数
+var resconv = "resconv.exe"
+var resarg1 = "conv"
+var tdrfile = "ResMeta.tdr"
+var convfile = "策划转表_公共.bat"

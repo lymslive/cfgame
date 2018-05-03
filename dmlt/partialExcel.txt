@@ -1,0 +1,7 @@
+/product/data_hf/xls/地图/地图配置表.xlsx
+/product/data_hf/xls/地图/传送配置表.xlsx
+/product/data_hf/xls/运营_49/活动开启配置表.xlsx
+/product/data_hf/xls/运营_JZ/活动开启配置表.xlsx
+/product/data_hf/xls/运营_fh/活动开启配置表.xlsx
+/product/data_hf/xls/运营_xw/活动开启配置表.xlsx
+

@@ -9,7 +9,7 @@ import (
 )
 
 // 复制文件，要求参数全路径或相对当前目录的路径
-func CopyFile(src, dst string) (w int64, err error) {
+func CopyFile(src, dst string) (n int64, err error) {
 	if src == "" || dst == "" || src == dst {
 		return 0, errors.New("invalid copy src or dst")
 	}

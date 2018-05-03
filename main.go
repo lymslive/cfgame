@@ -3,14 +3,21 @@ package main
 import (
 	"fmt"
 	"log"
-	"net/http"
+
+	"github.com/lymslive/cfgame/cmdline"
+	"github.com/lymslive/cfgame/server"
 )
 
 func main() {
-	http.HandleFunc("/", handler)
-	log.Fatal(http.ListenAndServe("localhost:8000", nil))
-}
+	cfg := cmdline.ParseConfig()
 
-func handler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Hello Go: URL.Path = %q\n", r.URL.Path)
+	var address = fmt.Sprintf("%s:%d", cfg.Server.Host, cfg.Server.Port)
+	fmt.Println("will Serve on:", address)
+
+	log.SetPrefix("[CFGAME] ")
+	log.SetFlags(log.Ltime | log.Lshortfile)
+
+	server.Start()
+
+	log.Printf("Serve on %s success! But cannot reach here\n", address)
 }
