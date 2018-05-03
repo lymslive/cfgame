@@ -3,7 +3,7 @@
 # 生成程序名同项目名，即父目录名
 cwd=$(pwd)
 project=$(basename $cwd)
-echo $cwd $project
+echo [$project] $cwd 
 
 # 备份上次生成的程序
 if [[ -x $project ]]; then
