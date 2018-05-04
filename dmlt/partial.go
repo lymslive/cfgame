@@ -72,7 +72,7 @@ func ParseOper(file string) (PartExcel, error) {
 // 分析一个文件路径中是否含有(运营_)段
 // 返回属性哪个运营标识，没有的话返回 comm
 func _whichOper(file string) (oper string) {
-	file = strings.Replace(file, "\\", "/", -1)
+	file = filepath.ToSlash(file)
 	lsMatch := operRegexp.FindStringSubmatch(file)
 	if lsMatch != nil && len(lsMatch) > 1 {
 		return lsMatch[1]

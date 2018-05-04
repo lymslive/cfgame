@@ -5,6 +5,7 @@ import (
 	"io"
 	"log"
 	"os"
+	"path/filepath"
 	"strings"
 )
 
@@ -51,4 +52,21 @@ func TrimExt(file string) string {
 	}
 
 	return file[:dot]
+}
+
+// 返回父目录
+func Parent(path string) string {
+	sep := string(filepath.Separator)
+
+	idx := strings.LastIndex(path, sep)
+	if idx < 0 {
+		return path
+	}
+	path = path[:idx]
+
+	if path == "" {
+		path = sep
+	}
+
+	return path
 }

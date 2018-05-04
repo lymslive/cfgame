@@ -38,4 +38,18 @@ func TestBasic(t *testing.T) {
 	n, err := CopyFile("basic.go", "basic.bak")
 	assert.True(err == nil, "CopyFile fails")
 	log.Printf("copy [%d] byte", n)
+
+	// 父目录提取
+	log.Println("test Parent ...")
+	path := "/a/b/c"
+	path = Parent(path)
+	assert.Equal(path, "/a/b", "Parent fails")
+	path = Parent(path)
+	assert.Equal(path, "/a", "Parent fails")
+	path = Parent(path)
+	assert.Equal(path, "/", "Parent fails")
+	path = Parent(path)
+	assert.Equal(path, "/", "Parent fails")
+	path = Parent("abc")
+	assert.Equal(path, "abc", "Parent fails")
 }
