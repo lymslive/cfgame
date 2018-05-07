@@ -63,6 +63,8 @@ func ParseOper(file string) (PartExcel, error) {
 		if _, ok := output[oper]; !ok {
 			output[oper] = make([]string, 0)
 		}
+
+		relate = filepath.FromSlash(relate)
 		output[oper] = append(output[oper], relate)
 	}
 

@@ -22,13 +22,29 @@ func ConvertExcel(files []string) error {
 
 	log.Println("copy excel to tmp dir ...")
 	for _, file := range files {
-		name := filepath.Base(file)
-		tmpfile := filepath.Join(subdir.midput, name)
-		_, err := fsop.CopyFile(file, tmpfile)
+		file := filepath.Join(datadir, file)
+		// name := filepath.Base(file)
+		// tmpfile := filepath.Join(datadir, subdir.midput, name)
+		tmpdir := filepath.Join(datadir, subdir.midput)
+		log.Printf("copy file[%s] to [%s]", file, tmpdir)
+		// _, err := fsop.CopyFile(file, tmpfile)
+		err := exec.Command("xcopy", "/Y", file, tmpdir).Run()
 		if err != nil {
-			log.Printf("copy file[%s] failed", name)
+			log.Printf("copy file[%s] failed", file)
 			return err
 		}
+		/*
+		log.Println("convert excel to plain csv ...")
+		pCmd := exec.Command(xls2csv, file, subdir.sheet, x2cconf)
+		if pCmd == nil {
+			return fmt.Errorf("cannot build execute cmd: xls2csv ...")
+		}
+		if err := pCmd.Run(); err != nil {
+			log.Println(err)
+			return err
+		}
+		*/
+
 	}
 
 	log.Println("convert excel to plain csv ...")
