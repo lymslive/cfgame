@@ -1,43 +1,55 @@
 #! /usr/bin/perl
+# ÓÉÖ¸¶¨µÄ excel ÎÄ¼şÂ·¾¶ÁĞ±í£¬ÊµÏÖ²¿·Ö×ª±í£¬Ö÷ÒªÓÃÓÚÔËÓªĞèÇó
+# ¸Ã½Å±¾Ó¦¸ÃÎ»ÓÚ data Êı¾İÖ÷Ä¿Â¼ÏÂµÄ pack\ ×ÓÄ¿Â¼
+# ÆäÓàÉæ¼°¶ÁÈ¡µÄÎÄ¼ş¶¼ÊÇÏà¶ÔÓÚ data Ö÷Ä¿Â¼µÄÂ·¾¶
 
 use strict;
 use warnings;
+use Archive::Tar;
 
-my $partFile = "partalExcel.txt";
+my $DEBUG = 1;
+my $partFile = "xls\\partialExcel.txt";
 my @commFiles = (); # list of file name
 my %operFiles = (); # hash of list ref
 
-my $dovFile = "ç­–åˆ’è½¬è¡¨_å…¬å…±.bat";
+my $dovFile = "²ß»®×ª±í_¹«¹².bat";
 my @doconvs = ();
 
+# Êı¾İÖ÷Ä¿Â¼ÔÚ½Å±¾¸¸Ä¿Â¼
+chdir('..');
+die "you may not in the correct data dir" unless (-d 'xls');
+
 main();
-##-- ä¸»è¿‡ç¨‹ --##
+##-- Ö÷¹ı³Ì --##
 sub main
 {
 	readFileList();
 	readDovList();
 
+	# seeFileList(); exit 0;
+
 	if (scalar keys(%operFiles) == 0) {
-		convertFiles(@commFiles, "comm");
-		print "convert with no oper done! press to finish...\n";
-		<STDIN>;
+		convertFiles(\@commFiles, "comm");
+		elog('prompt',  "convert with no oper done! press to finish...");
 	} else {
 		foreach my $oper (keys(%operFiles)) {
 			my @listFile = ();
 			push(@listFile, @commFiles);
 			push(@listFile, @{$operFiles{$oper}});
-			convertFiles(@listFile, $oper);
+			convertFiles(\@listFile, $oper);
 
-			print "convert $oper done! press to continue...\n";
+			elog('promt', "convert $oper done! press to continue...");
 			my $input = <STDIN>;
 			last if $input =~ /^[nq]/i;
 		}
 	}
+	elog('prompt', 'all conversion have done, press to exit');
+	<STDIN>;
 }
 
-##-- å­è¿‡ç¨‹ --##
+##-- ×Ó¹ı³Ì --##
 
-# è§£ææ–‡ä»¶åˆ—è¡¨
+# ½âÎöÎÄ¼şÁĞ±í
 sub readFileList
 {
 	open(my $fh, "<", $partFile) or die "cannot open $partFile: $!";
@@ -46,13 +58,15 @@ sub readFileList
 		next if /^\s*$/;
 		next if /^\s*#/;
 
-		# ç§»é™¤ xls/ è·¯å¾„ä¹‹å‰éƒ¨åˆ†
-		s#^.*/xsl/#xsl/#;
-		# å°† / æ›¿æ¢ä¸º \
+		# ÒÆ³ı xls/ Â·¾¶Ö®Ç°²¿·Ö
+		s#^.*/xls/#xls/#;
+		# ½« / Ìæ»»Îª \
 		s#/#\\#g;
 
+		elog("DBG", "read in: $_") if $DEBUG;
+
 		my $oper = "";
-		if (/_(.+)\//) {
+		if (/_(.+)\\/) {
 			$oper = $1;
 			if (not exists($operFiles{$oper})) {
 				$operFiles{$oper} = [];
@@ -62,9 +76,10 @@ sub readFileList
 			push(@commFiles, $_);
 		}
 	}
+	close($fh);
 }
 
-# è¯»å…¥æ‰¹å¤„ç†ä¸­æ¯æ¡è½¬è¡¨è¯­å¥
+# ¶ÁÈëÅú´¦ÀíÖĞÃ¿Ìõ×ª±íÓï¾ä
 sub readDovList
 {
 	open(my $fh, "<", $dovFile) or die "cannot open $dovFile: $!";
@@ -76,73 +91,111 @@ sub readDovList
 		next if /^\s*rem/i;
 		push(@doconvs, $_);
 	}
+	close($fh);
 }
 
 
-# è½¬æ¢ä¸€ä¸ªç»„æ–‡ä»¶åˆ—è¡¨
-# å‚æ•° $1 Excelæ–‡ä»¶ååˆ—è¡¨ï¼Œ$2 æ ‡ç­¾å
-sub convertFiles
+# ×ª»»Ò»¸ö×éÎÄ¼şÁĞ±í
+# ²ÎÊı $1 ExcelÎÄ¼şÃûÁĞ±í£¬$2 ±êÇ©Ãû
+sub convertFiles(\@$)
 {
-	my @files = shift;
+	my $files = shift;
 	my $label = shift;
 	$label = "comm" unless defined $label;
 
-	my ($doscmd, $ecode);
+	elog("INFO", "===== convert oper: $label =====");
 
 	cleanFolder();
 
-	# å¤åˆ¶æ–‡ä»¶è‡³ä¸´æ—¶ç›®å½• xls_tmp
-	foreach my $file (@files) {
+	# ¸´ÖÆÎÄ¼şÖÁÁÙÊ±Ä¿Â¼ xls_tmp
+	foreach my $file (@$files) {
 		my $dstfile = $file;
 		$dstfile =~ s/^.*\\//;
-		$doscmd = "xcopy /Y /F $file xls_tmp\\$dstfile";
-		$ecode = system($doscmd);
-		die "fails to copy $file, exit $ecode" unless $ecode == 0;
-		print "[done] $doscmd\n";
+		dosCmd("xcopy /Y $file xls_tmp");
 	}
 
-	# excel è½¬ csv
-	$doscmd = "x2c\\xls2csv.exe .\\xls_tmp .\\csv x2c.x2c";
-	$ecode = system($doscmd);
-	die "fails to convert to csv, exit $ecode" unless $ecode == 0;
-	print "[done] $doscmd\n";
+	# excel ×ª csv
+	dosCmd("x2c\\xls2csv.exe .\\xls_tmp .\\csv x2c.x2c");
 
-	# è¯»å–ç»“æœ csv æ–‡ä»¶åˆ—è¡¨
+	# ¶ÁÈ¡½á¹û csv ÎÄ¼şÁĞ±í
 	opendir(my $dh, "csv") or die "cannot open dir csv: $!";
 	my @csv = readdir($dh);
 	my %hascsv = ();
 	foreach my $v (@csv) {
-		print "$v\n";
+		next if $v =~ /^\./;
 		$v =~ s/\.csv//;
-		$hascsv{$v} = 1;
+		$hascsv{lc($v)} = 1;
+		elog("DBG", "hascsv{$v}\n") if $DEBUG;
 	}
 	
-	# å°† csv è½¬ä¸º bin
+	# ½« csv ×ªÎª bin
 	foreach my $do (@doconvs) {
-		my @words = split($do, '\s+');
+		my @words = split('\s+', $do);
 		foreach my $w (@words) {
-			if (exists($hascsv{$w})) {
-				$ecode = system($do);
-				die "fails to convert to bin, exit $ecode" unless $ecode == 0;
-				print "[done] $do\n";
+			# print "[DBG] word{$w}\n";
+			if (exists($hascsv{lc($w)})) {
+				dosCmd($do);
 				last;
 			}
 		}
 	}
 
-	# å°†ç»“æœ bin æ–‡ä»¶è½¬å­˜
-	mkdir("pack\\$label") or die "cannot create dir $label: $!";
-	$doscmd = "xcopy bin\\*.bin pack\\$label";
-	$ecode = system($doscmd);
-	die "fails to copy out bin, exit $ecode" unless $ecode == 0;
-	print "[done] $doscmd\n";
+	# ½«½á¹û bin ÎÄ¼ş×ª´æ²¢´ò°ü
+	if (-d "pack\\$label") {
+		dosCmd("rd /S /Q pack\\$label");
+	}
+	dosCmd("md pack\\$label");
+	dosCmd("xcopy pack\\res\\*.bin pack\\$label");
+	my @binfiles = glob("pack\\res\\*.bin");
+	my $tar = "pack\\$label.tgz";
+	Archive::Tar->create_archive($tar, COMPRESS_GZIP, @binfiles);
+	elog("", "result bin saved in $tar");
 }
 
-# æ¸…ç†å·¥ä½œç›®å½•
+# ÇåÀí¹¤×÷Ä¿Â¼
 sub cleanFolder
 {
-	my ($doscmd, $ecode);
+	dosCmd('rd /S /Q .\csv') if (-d '.\csv');
+	dosCmd('rd /S /Q .\xls_tmp') if (-d '.\xls_tmp');
+	dosCmd('rd /S /Q .\bin') if (-d '.\bin');
+	dosCmd('rd /S /Q .\pack\res') if (-d '.\pack\res');
+
+	dosCmd('md .\csv');
+	dosCmd('md .\xls_tmp');
+	dosCmd('md .\bin');
+	dosCmd('md .\pack\res');
 }
 
+# µ÷ÓÃÍâ²¿ÃüÁî
+sub dosCmd
+{
+	my $doscmd = shift;
+	my $ecode = system($doscmd);
+	die "[fail] exit $ecode; $doscmd" unless $ecode == 0;
+	elog('done', $doscmd);
+}
 
+# ¼òµ¥µÄÈÕÖ¾º¯Êı£¬ÒªÇóÇ°×ºÓëÊµ¼ÊÏûÏ¢Á½¸ö²ÎÊı£¬×Ô¶¯Ìí¼Ó»»ĞĞ
+sub elog($$)
+{
+	my ($prifex, $msg) = @_;
+	$prifex = "INFO" unless length($prifex) > 0;
+	chomp($msg);
+	print "[$prifex] $msg\n";
+}
 
+# µ÷ÊÔ²é¿´
+sub seeFileList
+{
+	print "comms files:\n";
+	foreach my $file (@commFiles){
+		print "  $file\n";
+	}
+
+	foreach my $oper (keys(%operFiles)) {
+		print "oper $oper files:\n";
+		foreach my $file (@{$operFiles{$oper}}){
+			print "  $file\n";
+		}
+	}
+}
