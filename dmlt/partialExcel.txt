@@ -1,7 +1,24 @@
-/product/data_hf/xls/Е°╟Е⌡╬/Е°╟Е⌡╬И┘█Г╫╝Х║╗.xlsx
-/product/data_hf/xls/Е°╟Е⌡╬/Д╪═И─│И┘█Г╫╝Х║╗.xlsx
-/product/data_hf/xls/Х©░Х░╔_49/Ф╢╩Е┼╗Е╪─Е░╞И┘█Г╫╝Х║╗.xlsx
-/product/data_hf/xls/Х©░Х░╔_JZ/Ф╢╩Е┼╗Е╪─Е░╞И┘█Г╫╝Х║╗.xlsx
-/product/data_hf/xls/Х©░Х░╔_fh/Ф╢╩Е┼╗Е╪─Е░╞И┘█Г╫╝Х║╗.xlsx
-/product/data_hf/xls/Х©░Х░╔_xw/Ф╢╩Е┼╗Е╪─Е░╞И┘█Г╫╝Х║╗.xlsx
+# в╒рБйбоН
+# хГ╧Шпч╦дакткс╙║╟ил╣Й╠М║╠ё╛р╡пХм╛й╠в╙║╟кФиМил╣Й╠М║╠
+# хГ╧Шпч╦дак║╟ткс╙╣ТбД╠М║╠ё╛р╡пХм╛й╠в╙║╟╣ТбД╠М║╠ё╛х║оШг╟╣╪ # в╒йм╥Ш╪╢©и
+/product/data_hf/xls/ил╣Й/кФиМил╣Й╠М.xlsx
+/product/data_hf/xls/╣ТбД/╣ТбД╠М.xlsx
 
+/product/data_hf/xls/NPC/NPCеДжц╠М.xlsx
+/product/data_hf/xls/ткс╙_49/ил╣Й╠М.xlsx
+/product/data_hf/xls/ткс╙_49/╩Н╤╞©╙фТеДжц╠М.xlsx
+/product/data_hf/xls/ткс╙_49/юш╪фЁДж╣.xlsx
+/product/data_hf/xls/ткс╙_49/ткс╙╣ТбД╠М.xlsx
+/product/data_hf/xls/ткс╙_fh/ил╣Й╠М.xlsx
+/product/data_hf/xls/ткс╙_fh/╩Н╤╞©╙фТеДжц╠М.xlsx
+/product/data_hf/xls/ткс╙_fh/юш╪фЁДж╣.xlsx
+/product/data_hf/xls/ткс╙_fh/ткс╙╣ТбД╠М.xlsx
+/product/data_hf/xls/ткс╙_JZ/ил╣Й╠М.xlsx
+/product/data_hf/xls/ткс╙_JZ/╩Н╤╞©╙фТеДжц╠М.xlsx
+/product/data_hf/xls/ткс╙_JZ/юш╪фЁДж╣.xlsx
+/product/data_hf/xls/ткс╙_JZ/юо╥ЧIDеДжц╠М.xlsx
+/product/data_hf/xls/ткс╙_JZ/ткс╙╣ТбД╠М.xlsx
+/product/data_hf/xls/ткс╙_xw/ил╣Й╠М.xlsx
+/product/data_hf/xls/ткс╙_xw/╩Н╤╞©╙фТеДжц╠М.xlsx
+/product/data_hf/xls/ткс╙_xw/юш╪фЁДж╣.xlsx
+/product/data_hf/xls/ткс╙_xw/ткс╙╣ТбД╠М.xlsx

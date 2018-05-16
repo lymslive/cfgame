@@ -1,6 +1,6 @@
 #! /usr/bin/perl
 # 由指定的 excel 文件路径列表，实现部分转表，主要用于运营需求
-# 该脚本应该位于 data 数据主目录下的 pack\ 子目录
+# 该脚本应该位于 data 数据主目录下的 runenv\ 子目录
 # 其余涉及读取的文件都是相对于 data 主目录的路径
 
 use strict;
@@ -141,13 +141,13 @@ sub convertFiles(\@$)
 	}
 
 	# 将结果 bin 文件转存并打包
-	if (-d "pack\\$label") {
-		dosCmd("rd /S /Q pack\\$label");
+	if (-d "runenv\\$label") {
+		dosCmd("rd /S /Q runenv\\$label");
 	}
-	dosCmd("md pack\\$label");
-	dosCmd("xcopy pack\\res\\*.bin pack\\$label");
-	my @binfiles = glob("pack\\res\\*.bin");
-	my $tar = "pack\\$label.tgz";
+	dosCmd("md runenv\\$label");
+	dosCmd("xcopy runenv\\zone_svr\\cfg\\res\\*.bin runenv\\$label");
+	my @binfiles = glob("runenv\\zone_svr\\cfg\\res\\*.bin");
+	my $tar = "runenv\\operdata_$label.tgz";
 	Archive::Tar->create_archive($tar, COMPRESS_GZIP, @binfiles);
 	elog("", "result bin saved in $tar");
 }
@@ -158,12 +158,12 @@ sub cleanFolder
 	dosCmd('rd /S /Q .\csv') if (-d '.\csv');
 	dosCmd('rd /S /Q .\xls_tmp') if (-d '.\xls_tmp');
 	dosCmd('rd /S /Q .\bin') if (-d '.\bin');
-	dosCmd('rd /S /Q .\pack\res') if (-d '.\pack\res');
+	dosCmd('rd /S /Q .\runenv\zone_svr\cfg\res') if (-d '.\runenv\zone_svr\cfg\res');
 
 	dosCmd('md .\csv');
 	dosCmd('md .\xls_tmp');
 	dosCmd('md .\bin');
-	dosCmd('md .\pack\res');
+	dosCmd('md .\runenv\zone_svr\cfg\res');
 }
 
 # 调用外部命令
